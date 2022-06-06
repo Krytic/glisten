@@ -1,13 +1,19 @@
 import math
+import re
 
 import colorama
 from colorama import Fore, Style, Back
+from tqdm import tqdm
 
 class Logger():
-    def __init__(self, log_file_location: str='.log', verbose_mode: bool=True):
+    def __init__(self, log_file_location: str='.log',
+                       verbose_mode: bool=True,
+                       line_length_break: int=72):
+
         self._logfile = log_file_location
         self._verbose = verbose_mode
         self._write_to_disk = False
+        self._auto_line_length_break = line_length_break
 
     def __enter__(self):
         colorama.init()
@@ -23,6 +29,21 @@ class Logger():
     def _decorate(self, header: str, color, modifier, message: str, sep_char: str="|"):
         header = header[0].upper() + header[1:].lower()
 
+        line_length_break = self._auto_line_length_break
+
+        if len(message) > line_length_break and "\n" not in message:
+            # Break it up ourselves.
+            i = 0
+            offset = 1
+            while i <= len(message):
+                part = message[i:i+line_length_break]
+                idx = part.rfind(" ")
+                message = message[:i+idx+offset] + "\n" + message[i+idx+offset:]
+
+                i += line_length_break
+
+            message = message.replace("\n\n", "\n")
+
         spacer = " " * (len(header) + 3)
         half_space = " " * math.floor(((len(header) + 3)/2))
 
@@ -37,6 +58,31 @@ class Logger():
 
         return f"{color}{modifier}[{header}]{Style.RESET_ALL} {message}"
 
+    def print(self, message):
+        tqdm.write(message)
+
+    def info(self, message):
+        decorated_message = self._decorate("info",
+                                           Fore.CYAN,
+                                           Style.DIM,
+                                           message)
+
+        if self._verbose:
+            self.print(decorated_message)
+
+        self._log_to_disk("info", message)
+
+    def status(self, message):
+        decorated_message = self._decorate("status",
+                                           Fore.GREEN,
+                                           Style.BRIGHT,
+                                           message)
+
+        if self._verbose:
+            self.print(decorated_message)
+
+        self._log_to_disk("info", message)
+
     def warn(self, message):
         decorated_message = self._decorate("warning",
                                            Fore.YELLOW,
@@ -44,7 +90,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            print(decorated_message)
+            self.print(decorated_message)
 
         self._log_to_disk("warning", message)
 
@@ -55,7 +101,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            print(decorated_message)
+            self.print(decorated_message)
 
         self._log_to_disk("error", message)
 
@@ -66,7 +112,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            print(decorated_message)
+            self.print(decorated_message)
 
         self._log_to_disk("deprecated", message)
 
