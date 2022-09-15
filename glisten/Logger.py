@@ -58,7 +58,18 @@ class Logger():
 
         return f"{color}{modifier}[{header}]{Style.RESET_ALL} {message}"
 
-    def print(self, message):
+    def types(self):
+        types = dir(self)
+        retobj = []
+
+        for T in types:
+            if T not in ['deprecate', 'types']:
+                if T[0] != "_":
+                    retobj.append(T)
+
+        return retobj
+
+    def _print(self, message):
         tqdm.write(message)
 
     def info(self, message):
@@ -68,7 +79,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            self.print(decorated_message)
+            self._print(decorated_message)
 
         self._log_to_disk("info", message)
 
@@ -79,7 +90,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            self.print(decorated_message)
+            self._print(decorated_message)
 
         self._log_to_disk("info", message)
 
@@ -90,7 +101,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            self.print(decorated_message)
+            self._print(decorated_message)
 
         self._log_to_disk("warning", message)
 
@@ -101,7 +112,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            self.print(decorated_message)
+            self._print(decorated_message)
 
         self._log_to_disk("error", message)
 
@@ -112,7 +123,7 @@ class Logger():
                                            message)
 
         if self._verbose:
-            self.print(decorated_message)
+            self._print(decorated_message)
 
         self._log_to_disk("deprecated", message)
 
