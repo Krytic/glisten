@@ -11,7 +11,7 @@ except FileNotFoundError:
 
 setup(name='glisten',
       license           = 'MIT License',
-      version           = 'v1.0.0alpha',
+      version           = 'v1.0.0',
       description       = description,
       long_description  = long_description,
       author            = "Sean Richards",

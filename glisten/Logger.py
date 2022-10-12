@@ -15,6 +15,9 @@ class Logger():
         self._write_to_disk = False
         self._auto_line_length_break = line_length_break
 
+    def get_max_line_length(self):
+        return self._auto_line_length_break
+
     def __enter__(self):
         colorama.init()
         self._logfile_pointer = open(self._logfile, 'w')
