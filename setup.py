@@ -22,7 +22,7 @@ setup(name='glisten',
       homepage                       = 'https://github.com/Krytic/glisten',
       install_requires               = ['colorama', 'tqdm'],
       project_urls                   = {
-                                        'Source': 'https://github.com/krytic/glisten'
+                                        'Source': 'https://github.com/krytic/glisten',
                                         'Bug Tracker': 'https://github.com/krytic/glisten/issues'
       },
       python_requires='>=3'
