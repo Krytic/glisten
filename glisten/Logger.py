@@ -100,7 +100,7 @@ class Logger():
     def warn(self, message):
         decorated_message = self._decorate("warning",
                                            Fore.YELLOW,
-                                           Style.DIM,
+                                           Style.BRIGHT,
                                            message)
 
         if self._verbose:
